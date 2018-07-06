@@ -2,7 +2,6 @@
 Author: Omri Ganor
 Purpose: Checks whether a website might be a phishing copy of another website.
 """
-from checkers.static_checkers.is_known_phish import is_known_phish
 from checkers.is_same_domain import is_same_domain
 
 
