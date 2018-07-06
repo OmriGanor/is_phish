@@ -1,5 +1,6 @@
 import argparse
 
+
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("-o", help='the original website to check for phishing copies')
