@@ -2,7 +2,7 @@
 Author: Omri Ganor
 Purpose: Checks whether a website might be a phishing copy of another website.
 """
-from checkers.is_same_domain import is_same_domain
+from checkers.absolute_checkers.is_same_domain import is_same_domain
 
 
 def run_engine(original_url, test_url, config):
