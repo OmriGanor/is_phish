@@ -1,0 +1,9 @@
+{
+	"checkers":
+	{
+		"static_checkers":
+		{
+			"known_phish_database_path":"C:\\Users\\omri\\Desktop\\programming\\is_phish\\code\\data\\known_phish.txt"
+		}
+	}
+}
