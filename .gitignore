@@ -89,6 +89,7 @@ ENV/
 
 # idea
 .idea
+.idea/
 idea/
 
 # Spyder project settings
