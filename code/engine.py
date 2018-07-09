@@ -14,6 +14,6 @@ def run_engine(original_url, test_url, config):
     is_same_domain(original_url, test_url)
     is_long_url(test_url, config["checkers"]["long_url_length"])
     is_similar_urls(original_url, test_url)
-    return same_image_ratio(original_url, test_url)
+    return same_image_ratio(original_url, test_url, r"C:\temp")
 
 
