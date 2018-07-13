@@ -61,7 +61,7 @@ def get_average_image_similarity(url1_images, url2_images):
             continue
         score += max([get_image_similarity(image1, image2)
                       for image2 in url2_images if is_valid_image(image2)])
-    return score / len(valid_images)
+    return score / valid_images
 
 
 def download_file(url, download_directory):
