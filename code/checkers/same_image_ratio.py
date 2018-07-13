@@ -5,6 +5,23 @@ import uuid
 import cv2
 from skimage.measure import compare_ssim
 import time
+from checkers.checker import Checker
+
+
+class ImageSimilarityChecker(Checker):
+    def __init__(self, to_check_url, original_url, temp_working_directory):
+        self.temp_working_directory = temp_working_directory
+        super().__init__(to_check_url, original_url)
+
+    def run_check(self):
+        return ImageSimilarityChecker.same_image_ratio(self.to_check_url,
+                                                       self.original_url, self.temp_working_directory)
+
+    @staticmethod
+    def same_image_ratio(url1, url2, temp_working_directory):
+        url1_images = download_images_from_url(url1, temp_working_directory)
+        url2_images = download_images_from_url(url2, temp_working_directory)
+        return get_average_image_similarity(url1_images, url2_images)
 
 
 def is_valid_image(path):
@@ -34,15 +51,17 @@ def get_image_similarity(path1, path2):
 
 def get_average_image_similarity(url1_images, url2_images):
     score = 0
+    valid_images = len(url1_images)
     if len(url1_images) == 0:
         return 0
 
     for image1 in url1_images:
         if not is_valid_image(image1):
+            valid_images -= 1
             continue
         score += max([get_image_similarity(image1, image2)
                       for image2 in url2_images if is_valid_image(image2)])
-    return score / len(url1_images)
+    return score / len(valid_images)
 
 
 def download_file(url, download_directory):
@@ -72,8 +91,4 @@ def download_images_from_url(url, temp_directory):
     return images
 
 
-def same_image_ratio(url1, url2, temp_working_directory):
-    # TODO: change sequence matcher to proper image comparing library
-    url1_images = download_images_from_url(url1, temp_working_directory)
-    url2_images = download_images_from_url(url2, temp_working_directory)
-    return get_average_image_similarity(url1_images, url2_images)
+
