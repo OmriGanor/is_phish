@@ -3,7 +3,7 @@
 	{
 		"absolute_checkers":
 		{
-			"known_phish_database_path":"C:\\Users\\omri\\Desktop\\programming\\is_phish\\code\\data\\known_phish.txt"
+			"known_phish_database_path":"data\\known_phish.txt"
 		},
 		"long_url_length":50
 	}
