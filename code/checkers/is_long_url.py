@@ -2,7 +2,7 @@
 Author: Omri Ganor
 Purpose: Checks whether a url is long. Phishing urls are often very long.
 """
-from checkers.checker import Checker
+from checkers.checker import Checker,CheckFailedException
 
 
 class LongUrlChecker(Checker):
@@ -11,7 +11,11 @@ class LongUrlChecker(Checker):
         super().__init__(to_check_url, "")
 
     def run_check(self):
-        return LongUrlChecker.is_long_url(self.to_check_url, self.long_url_length)
+        try:
+            return LongUrlChecker.is_long_url(self.to_check_url, self.long_url_length)
+        except Exception as e:
+            raise CheckFailedException("failed to check if {0} is longer than {1}"
+                                       .format(self.to_check_url, self.long_url_length)) from e
 
     @staticmethod
     def is_long_url(url, length):

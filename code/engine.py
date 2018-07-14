@@ -18,4 +18,4 @@ def run_engine(original_url, test_url, config):
     similar_urls_checker = SimilarUrlsChecker(original_url, test_url)
     image_similarity_checker = ImageSimilarityChecker(original_url, test_url, r"C:\temp")
     phishy_words_checker = PhishyWordsChecker(test_url, os.path.join(os.path.dirname(os.path.abspath(__file__)), config["checkers"]["phishy_words_database_path"]))
-    return phishy_words_checker.run_check()
+    return None
