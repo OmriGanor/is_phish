@@ -2,17 +2,22 @@
 Author: Omri Ganor
 Purpose: Checks the amount of occurrences of phishy words in the website we are testing.
 """
-from checkers.checker import Checker,CheckFailedException
+from checkers.checker import Checker, CheckFailedException
 import requests
+import logging
 
 
 class PhishyWordsChecker(Checker):
     def __init__(self, to_check_url, phishy_words_path):
+        self.logger = logging.getLogger()
+        self.logger.debug("Instantiating PhishyWordsChecker with {0} {1}".format(to_check_url, phishy_words_path))
         self.phishy_words_path = phishy_words_path
         super().__init__(to_check_url, "")
 
     def run_check(self):
         try:
+            self.logger.debug(
+                "running PhishyWordsChecker with {0} {1}".format(self.to_check_url, self.phishy_words_path))
             return PhishyWordsChecker.phishy_words_ratio(self.to_check_url, self.phishy_words_path)
         except Exception as e:
             raise CheckFailedException("failed to check phishy words ratio on {0} from {1}"

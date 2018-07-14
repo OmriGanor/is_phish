@@ -6,15 +6,20 @@ import cv2
 from skimage.measure import compare_ssim
 import time
 from checkers.checker import Checker,CheckFailedException
+import logging
 
 
 class ImageSimilarityChecker(Checker):
     def __init__(self, to_check_url, original_url, temp_working_directory):
+        self.logger = logging.getLogger()
+        self.logger.debug("Instantiating ImageSimilarityChecker with {0} {1} {2}".format(to_check_url, original_url, temp_working_directory))
         self.temp_working_directory = temp_working_directory
         super().__init__(to_check_url, original_url)
 
     def run_check(self):
         try:
+            self.logger.debug(
+                "running ImageSimilarityChecker with {0} {1} {2}".format(self.to_check_url, self.original_url, self.temp_working_directory))
             return ImageSimilarityChecker.same_image_ratio(self.to_check_url,
                                                            self.original_url, self.temp_working_directory)
         except Exception as e:
