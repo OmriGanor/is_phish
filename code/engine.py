@@ -7,6 +7,7 @@ from checkers.absolute_checkers.is_known_phish import KnowPhishChecker
 from checkers.is_long_url import LongUrlChecker
 from checkers.is_similar_urls import SimilarUrlsChecker
 from checkers.same_image_ratio import ImageSimilarityChecker
+from checkers.phishy_words_ratio import PhishyWordsChecker
 import os
 
 
@@ -16,4 +17,5 @@ def run_engine(original_url, test_url, config):
     long_url_checker = LongUrlChecker(test_url, config["checkers"]["long_url_length"])
     similar_urls_checker = SimilarUrlsChecker(original_url, test_url)
     image_similarity_checker = ImageSimilarityChecker(original_url, test_url, r"C:\temp")
-    return image_similarity_checker.run_check()
+    phishy_words_checker = PhishyWordsChecker(test_url, os.path.join(os.path.dirname(os.path.abspath(__file__)), config["checkers"]["phishy_words_database_path"]))
+    return phishy_words_checker.run_check()
