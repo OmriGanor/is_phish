@@ -3,9 +3,16 @@
 	{
 		"absolute_checkers":
 		{
-			"known_phish_database_path":"data\\known_phish.txt"
+		  "known_phish_database_path":"data\\known_phish.txt"
 		},
+		"weights": {
+          "LongUrlChecker": 0.1,
+          "SimilarUrlsChecker":0.3,
+          "PhishyWordsChecker":0.2,
+          "ImageSimilarityChecker":0.4
+        },
 		"long_url_length":50,
-		"phishy_words_database_path":"data\\phishy_words.txt"
+		"phishy_words_database_path":"data\\phishy_words.txt",
+        "temp_working_directory":"C:\\temp"
 	}
 }
