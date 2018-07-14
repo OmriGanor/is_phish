@@ -5,7 +5,7 @@ import uuid
 import cv2
 from skimage.measure import compare_ssim
 import time
-from checkers.checker import Checker,CheckFailedException
+from checkers.checker import Checker, CheckFailedException
 import logging
 
 
@@ -22,10 +22,12 @@ class ImageSimilarityChecker(Checker):
                 "running ImageSimilarityChecker with {0} {1} {2}".format(self.to_check_url, self.original_url, self.temp_working_directory))
             return ImageSimilarityChecker.same_image_ratio(self.to_check_url,
                                                            self.original_url, self.temp_working_directory)
-        except Exception as e:
-            raise CheckFailedException(
+        except CheckFailedException:
+            self.logger.error(
                 "failed to check image similarirtys between {0} and {1} with temp working directory {2}"
-                    .format(self.to_check_url, self.original_url, self.temp_working_directory)) from e
+                    .format(self.to_check_url, self.original_url, self.temp_working_directory)
+            )
+            raise
 
     @staticmethod
     def same_image_ratio(url1, url2, temp_working_directory):
@@ -63,7 +65,7 @@ def get_average_image_similarity(url1_images, url2_images):
     score = 0
     valid_images = len(url1_images)
     if len(url1_images) == 0:
-        raise Exception("")
+        return 1
 
     for image1 in url1_images:
         if not is_valid_image(image1):
@@ -71,7 +73,7 @@ def get_average_image_similarity(url1_images, url2_images):
             continue
         valid_images =[get_image_similarity(image1, image2) for image2 in url2_images if is_valid_image(image2)]
         if valid_images:
-            raise Exception("")
+            raise CheckFailedException("No valid images to compare")
         score += max(valid_images)
     return score / valid_images
 
