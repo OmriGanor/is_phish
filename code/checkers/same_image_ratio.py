@@ -1,3 +1,7 @@
+"""
+Author: Omri Ganor
+Purpose: Checks the image similarity ratio between to websites.
+"""
 import requests
 from bs4 import BeautifulSoup
 import os
