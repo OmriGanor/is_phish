@@ -4,6 +4,10 @@ Purpose: serves as an abstract checker that all checkers need to implement.
 """
 
 
+class CheckFailedException(Exception):
+    pass
+
+
 class Checker(object):
     def __init__(self, to_check_url, original_url):
         self.to_check_url = to_check_url

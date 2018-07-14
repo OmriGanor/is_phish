@@ -2,7 +2,7 @@
 Author: Omri Ganor
 Purpose: Checks the amount of occurrences of phishy words in the website we are testing.
 """
-from checkers.checker import Checker
+from checkers.checker import Checker,CheckFailedException
 import requests
 
 
@@ -12,7 +12,11 @@ class PhishyWordsChecker(Checker):
         super().__init__(to_check_url, "")
 
     def run_check(self):
-        return PhishyWordsChecker.phishy_words_ratio(self.to_check_url, self.phishy_words_path)
+        try:
+            return PhishyWordsChecker.phishy_words_ratio(self.to_check_url, self.phishy_words_path)
+        except Exception as e:
+            raise CheckFailedException("failed to check phishy words ratio on {0} from {1}"
+                                       .format(self.to_check_url, self.phishy_words_path)) from e
 
     @staticmethod
     def phishy_words_ratio(url1, phishy_words_path):

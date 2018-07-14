@@ -5,7 +5,7 @@ import uuid
 import cv2
 from skimage.measure import compare_ssim
 import time
-from checkers.checker import Checker
+from checkers.checker import Checker,CheckFailedException
 
 
 class ImageSimilarityChecker(Checker):
@@ -14,8 +14,13 @@ class ImageSimilarityChecker(Checker):
         super().__init__(to_check_url, original_url)
 
     def run_check(self):
-        return ImageSimilarityChecker.same_image_ratio(self.to_check_url,
-                                                       self.original_url, self.temp_working_directory)
+        try:
+            return ImageSimilarityChecker.same_image_ratio(self.to_check_url,
+                                                           self.original_url, self.temp_working_directory)
+        except Exception as e:
+            raise CheckFailedException("""failed to check image similarirtys between {0} and 
+                                         {1} with temp working directory {2}"""
+                                       .format(self.to_check_url, self.original_url, self.temp_working_directory)) from e
 
     @staticmethod
     def same_image_ratio(url1, url2, temp_working_directory):

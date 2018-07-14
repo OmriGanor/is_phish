@@ -3,7 +3,7 @@ Author: Omri Ganor
 Purpose: Checks the similarity ratio of two urls.
 """
 from difflib import SequenceMatcher
-from checkers.checker import Checker
+from checkers.checker import Checker,CheckFailedException
 
 
 class SimilarUrlsChecker(Checker):
@@ -11,7 +11,11 @@ class SimilarUrlsChecker(Checker):
         super().__init__(to_check_url, original_url)
 
     def run_check(self):
-        return SimilarUrlsChecker.is_similar_urls(self.to_check_url, self.original_url)
+        try:
+            return SimilarUrlsChecker.is_similar_urls(self.to_check_url, self.original_url)
+        except Exception as e:
+            raise CheckFailedException("failed to check if {0} is similar to {1}"
+                                       .format(self.to_check_url, self.original_url)) from e
 
     @staticmethod
     def is_similar_urls(url1, url2):
