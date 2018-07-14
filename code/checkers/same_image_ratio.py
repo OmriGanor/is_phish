@@ -1,3 +1,7 @@
+"""
+Author: Omri Ganor
+Purpose: Checks the image similarity ratio between to websites.
+"""
 import requests
 from bs4 import BeautifulSoup
 import os
@@ -30,10 +34,32 @@ class ImageSimilarityChecker(Checker):
             raise
 
     @staticmethod
-    def same_image_ratio(url1, url2, temp_working_directory):
-        url1_images = download_images_from_url(url1, temp_working_directory)
-        url2_images = download_images_from_url(url2, temp_working_directory)
-        return get_average_image_similarity(url1_images, url2_images)
+    def same_image_ratio(to_check_url, original_url, temp_working_directory):
+        to_check_url = download_images_from_url(to_check_url, temp_working_directory)
+        original_url = download_images_from_url(original_url, temp_working_directory)
+        return ImageSimilarityChecker.get_average_image_similarity(to_check_url, original_url)
+
+    @staticmethod
+    def get_average_image_similarity(to_check_url_images, original_url_images):
+        score = 0
+        valid_images = len(to_check_url_images)
+        if len(original_url_images) == 0 and len(to_check_url_images) == 0:
+            return 1
+        elif len(original_url_images) == 0 and not len(to_check_url_images) == 0 or \
+                len(original_url_images) != 0 and len(to_check_url_images) == 0:
+            return 0
+
+        for image1 in to_check_url_images:
+            if not is_valid_image(image1):
+                valid_images -= 1
+                continue
+            image_similarities = [get_image_similarity(image1, image2) for image2 in original_url_images if
+                                  is_valid_image(image2)]
+            score += max(image_similarities)
+
+        if len(valid_images) == 0:
+            raise CheckFailedException("No valid images to compare")
+        return score / valid_images
 
 
 def is_valid_image(path):
@@ -59,23 +85,6 @@ def get_image_similarity(path1, path2):
     # returns a score between -1 to 1 with 1 being a perfect match.
     score = compare_ssim(gray1, gray2)
     return (score + 1) / 2.0  # normalize score to be between 0 and 1
-
-
-def get_average_image_similarity(url1_images, url2_images):
-    score = 0
-    valid_images = len(url1_images)
-    if len(url1_images) == 0:
-        return 1
-
-    for image1 in url1_images:
-        if not is_valid_image(image1):
-            valid_images -= 1
-            continue
-        valid_images =[get_image_similarity(image1, image2) for image2 in url2_images if is_valid_image(image2)]
-        if valid_images:
-            raise CheckFailedException("No valid images to compare")
-        score += max(valid_images)
-    return score / valid_images
 
 
 def download_file(url, download_directory):

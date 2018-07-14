@@ -47,7 +47,7 @@ def run_engine(original_url, test_url, config):
     if is_known_phish:
         return 1, 1
 
-    """
+
     try:
         is_same_domain = same_domain_checker.run_check()
     except CheckFailedException as e:
@@ -55,7 +55,6 @@ def run_engine(original_url, test_url, config):
                      .format(same_domain_checker.to_check_url, same_domain_checker.original_url), str(e))
     if is_same_domain:
         return 0, 1
-    """
 
     checkers = create_checkers(original_url, test_url, config)
     for checker in checkers:
