@@ -10,11 +10,11 @@ import logging
 
 
 class ImageSimilarityChecker(Checker):
-    def __init__(self, to_check_url, original_url, temp_working_directory):
+    def __init__(self, to_check_url, original_url, temp_working_directory, weight):
         self.logger = logging.getLogger()
         self.logger.debug("Instantiating ImageSimilarityChecker with {0} {1} {2}".format(to_check_url, original_url, temp_working_directory))
         self.temp_working_directory = temp_working_directory
-        super().__init__(to_check_url, original_url)
+        super().__init__(to_check_url, original_url, weight)
 
     def run_check(self):
         try:
@@ -23,9 +23,9 @@ class ImageSimilarityChecker(Checker):
             return ImageSimilarityChecker.same_image_ratio(self.to_check_url,
                                                            self.original_url, self.temp_working_directory)
         except Exception as e:
-            raise CheckFailedException("""failed to check image similarirtys between {0} and 
-                                         {1} with temp working directory {2}"""
-                                       .format(self.to_check_url, self.original_url, self.temp_working_directory)) from e
+            raise CheckFailedException(
+                "failed to check image similarirtys between {0} and {1} with temp working directory {2}"
+                    .format(self.to_check_url, self.original_url, self.temp_working_directory)) from e
 
     @staticmethod
     def same_image_ratio(url1, url2, temp_working_directory):
@@ -56,21 +56,23 @@ def get_image_similarity(path1, path2):
     # compute the Structural Similarity Index (SSIM) between the two images.
     # returns a score between -1 to 1 with 1 being a perfect match.
     score = compare_ssim(gray1, gray2)
-    return score
+    return (score + 1) / 2.0  # normalize score to be between 0 and 1
 
 
 def get_average_image_similarity(url1_images, url2_images):
     score = 0
     valid_images = len(url1_images)
     if len(url1_images) == 0:
-        return 0
+        raise Exception("")
 
     for image1 in url1_images:
         if not is_valid_image(image1):
             valid_images -= 1
             continue
-        score += max([get_image_similarity(image1, image2)
-                      for image2 in url2_images if is_valid_image(image2)])
+        valid_images =[get_image_similarity(image1, image2) for image2 in url2_images if is_valid_image(image2)]
+        if valid_images:
+            raise Exception("")
+        score += max(valid_images)
     return score / valid_images
 
 

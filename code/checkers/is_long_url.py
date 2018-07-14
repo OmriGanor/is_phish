@@ -7,11 +7,11 @@ import logging
 
 
 class LongUrlChecker(Checker):
-    def __init__(self, to_check_url, long_url_length):
+    def __init__(self, to_check_url, long_url_length, weight):
         self.long_url_length = long_url_length
         self.logger = logging.getLogger()
         self.logger.debug("Instantiating LongUrlChecker with {0} {1}".format(to_check_url, long_url_length))
-        super().__init__(to_check_url, "")
+        super().__init__(to_check_url, "", weight)
 
     def run_check(self):
         try:
@@ -23,4 +23,7 @@ class LongUrlChecker(Checker):
 
     @staticmethod
     def is_long_url(url, length):
-        return len(url) > length
+        if len(url) > length:
+            return 1.0
+        else:
+            return 0

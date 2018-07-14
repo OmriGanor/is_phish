@@ -9,9 +9,10 @@ class CheckFailedException(Exception):
 
 
 class Checker(object):
-    def __init__(self, to_check_url, original_url):
+    def __init__(self, to_check_url, original_url, weight=0):
         self.to_check_url = to_check_url
         self.original_url = original_url
+        self.weight = weight
 
     def run_check(self):
         raise NotImplementedError("""This method needs to be implemented by each checker. 

@@ -8,11 +8,11 @@ import logging
 
 
 class PhishyWordsChecker(Checker):
-    def __init__(self, to_check_url, phishy_words_path):
+    def __init__(self, to_check_url, phishy_words_path, weight):
         self.logger = logging.getLogger()
         self.logger.debug("Instantiating PhishyWordsChecker with {0} {1}".format(to_check_url, phishy_words_path))
         self.phishy_words_path = phishy_words_path
-        super().__init__(to_check_url, "")
+        super().__init__(to_check_url, "", weight)
 
     def run_check(self):
         try:
